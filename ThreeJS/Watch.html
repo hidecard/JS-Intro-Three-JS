@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holographic Watch Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Oxanium', sans-serif;
+            color: #c0c0c0;
+            overflow-x: hidden;
+            background: #0a0a1a; /* Dark obsidian */
+        }
+        /* Navigation */
+        nav {
+            background: rgba(10, 10, 26, 0.7);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #0055ff;
+            animation: holoGlow 2s infinite alternate;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 2rem;
+        }
+        nav ul li a {
+            color: #c0c0c0;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 500;
+            transition: color 0.3s, transform 0.3s;
+        }
+        nav ul li a:hover {
+            color: #0055ff; /* Cobalt blue */
+            transform: scale(1.1);
+            text-shadow: 0 0 10px #0055ff;
+        }
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 100%);
+            overflow: hidden;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"%3E%3Ccircle cx="20" cy="20" r="1" fill="%230055ff" opacity="0.3"/%3E%3Ccircle cx="80" cy="80" r="1" fill="%23c0c0c0" opacity="0.3"/%3E%3C/svg%3E');
+            animation: particleSpark 15s linear infinite;
+        }
+        #hero-canvas {
+            width: 600px;
+            height: 400px;
+            border: 2px solid #0055ff;
+            box-shadow: 0 0 20px #0055ff;
+            background: rgba(10, 10, 26, 0.5);
+            border-radius: 10px;
+            animation: holoWarp 3s infinite alternate;
+        }
+        .hero-content {
+            text-align: center;
+            color: #c0c0c0;
+            z-index: 10;
+            position: absolute;
+            top: 15%;
+            text-shadow: 0 0 10px #0055ff;
+        }
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            animation: holoFlicker 2s infinite;
+        }
+        .hero-content p {
+            font-size: 1.8rem;
+            font-weight: 300;
+        }
+        /* Product Section */
+        #product {
+            padding: 5rem 2rem;
+            background: #0a0a1a;
+            text-align: center;
+        }
+        #product-canvas {
+            width: 600px;
+            height: 400px;
+            margin: 2rem auto;
+            border: 2px solid #c0c0c0;
+            box-shadow: 0 0 20px #c0c0c0;
+            background: rgba(10, 10, 26, 0.5);
+            border-radius: 10px;
+            animation: holoWarp 3s infinite alternate;
+        }
+        .product-details h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #0055ff;
+            text-shadow: 0 0 10px #0055ff;
+        }
+        .product-details p {
+            font-size: 1.5rem;
+            max-width: 600px;
+            margin: 1rem auto;
+            color: #c0c0c0;
+        }
+        /* Animations */
+        @keyframes holoGlow {
+            0% { border-color: #0055ff; box-shadow: 0 0 10px #0055ff; }
+            100% { border-color: #c0c0c0; box-shadow: 0 0 20px #c0c0c0; }
+        }
+        @keyframes holoFlicker {
+            0% { opacity: 1; }
+            10% { opacity: 0.9; }
+            20% { opacity: 1; }
+            30% { opacity: 0.95; }
+            40% { opacity: 1; }
+            100% { opacity: 1; }
+        }
+        @keyframes holoWarp {
+            0% { transform: perspective(1000px) rotateX(0deg); }
+            100% { transform: perspective(1000px) rotateX(2deg); }
+        }
+        @keyframes particleSpark {
+            0% { background-position: 0 0; }
+            100% { background-position: 100px 100px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#product">Watches</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1 class="animate-text">Holo Time</h1>
+            <p class="animate-text">Futuristic elegance</p>
+        </div>
+    </section>
+
+    <!-- Product Section -->
+    <section id="product">
+        <h2 class="animate-text">Interactive Watch</h2>
+        <canvas id="product-canvas"></canvas>
+        <div class="product-details">
+            <h2>Orbit Chrono</h2>
+            <p>Experience this holographic watch, designed with cutting-edge sci-fi luxury.</p>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script>
+        // Helper function to create a futuristic watch
+        function createWatch(type = 'rectangular') {
+            const group = new THREE.Group();
+
+            // Watch body
+            const bodyMaterial = new THREE.MeshPhysicalMaterial({
+                color: type === 'rectangular' ? 0x0055ff : 0xc0c0c0,
+                metalness: 0.8,
+                roughness: 0.2,
+                clearcoat: 0.9
+            });
+            const bodyGeometry = type === 'rectangular' ?
+                new THREE.BoxGeometry(0.6, 0.1, 0.3) :
+                new THREE.CylinderGeometry(0.3, 0.3, 0.1, 32);
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.y = 0.05;
+            group.add(body);
+
+            // Watch face
+            const faceMaterial = new THREE.MeshBasicMaterial({
+                color: type === 'rectangular' ? 0xc0c0c0 : 0x0055ff,
+                transparent: true,
+                opacity: 0.8
+            });
+            const faceGeometry = type === 'rectangular' ?
+                new THREE.PlaneGeometry(0.5, 0.2) :
+                new THREE.CircleGeometry(0.25, 32);
+            const face = new THREE.Mesh(faceGeometry, faceMaterial);
+            face.position.set(0, 0.06, 0);
+            face.rotation.x = -Math.PI / 2;
+            group.add(face);
+
+            // Markers (holographic)
+            const markerMaterial = new THREE.MeshBasicMaterial({ color: 0x0055ff });
+            for (let i = 0; i < 4; i++) {
+                const markerGeometry = new THREE.BoxGeometry(0.02, 0.02, 0.02);
+                const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+                const angle = (i / 4) * Math.PI * 2;
+                marker.position.set(
+                    (type === 'rectangular' ? 0.2 : 0.2) * Math.cos(angle),
+                    0.07,
+                    (type === 'rectangular' ? 0.08 : 0.2) * Math.sin(angle)
+                );
+                group.add(marker);
+            }
+
+            return group;
+        }
+
+        // Hero Section Three.js Setup
+        const heroCanvas = document.getElementById('hero-canvas');
+        const heroScene = new THREE.Scene();
+        const heroCamera = new THREE.PerspectiveCamera(75, 600 / 400, 0.1, 1000);
+        const heroRenderer = new THREE.WebGLRenderer({ canvas: heroCanvas, alpha: true });
+        heroRenderer.setSize(600, 400);
+        heroCamera.position.z = 1.2;
+
+        // Lighting for Hero
+        const heroAmbientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        heroScene.add(heroAmbientLight);
+        const heroSpotLight1 = new THREE.SpotLight(0x0055ff, 1.5, 10, Math.PI / 6);
+        heroSpotLight1.position.set(2, 2, 2);
+        heroScene.add(heroSpotLight1);
+        const heroSpotLight2 = new THREE.SpotLight(0xc0c0c0, 1, 10, Math.PI / 6);
+        heroSpotLight2.position.set(-2, -2, 2);
+        heroScene.add(heroSpotLight2);
+
+        // Create Hero Watch
+        const heroModel = createWatch('rectangular');
+        heroModel.scale.set(1.5, 1.5, 1.5);
+        heroScene.add(heroModel);
+
+        // Hero Animation Loop
+        function animateHero() {
+            requestAnimationFrame(animateHero);
+            heroModel.rotation.y += 0.01;
+            heroModel.rotation.x = Math.sin(performance.now() * 0.001) * 0.1;
+            heroRenderer.render(heroScene, heroCamera);
+        }
+        animateHero();
+
+        // GSAP Animation for Hero Watch
+        gsap.to(heroModel.position, {
+            y: 0.1,
+            duration: 2,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut'
+        });
+        gsap.to(heroModel.children[1].material, {
+            opacity: 0.6,
+            duration: 1,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut'
+        });
+
+        // Product Section Three.js Setup
+        const productCanvas = document.getElementById('product-canvas');
+        const productScene = new THREE.Scene();
+        const productCamera = new THREE.PerspectiveCamera(75, 600 / 400, 0.1, 1000);
+        const productRenderer = new THREE.WebGLRenderer({ canvas: productCanvas, alpha: true });
+        productRenderer.setSize(600, 400);
+        productCamera.position.z = 1.2;
+
+        // Lighting for Product
+        const productAmbientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        productScene.add(productAmbientLight);
+        const productSpotLight1 = new THREE.SpotLight(0xc0c0c0, 1.5, 10, Math.PI / 6);
+        productSpotLight1.position.set(2, 2, 2);
+        productScene.add(productSpotLight1);
+        const productSpotLight2 = new THREE.SpotLight(0x0055ff, 1, 10, Math.PI / 6);
+        productSpotLight2.position.set(-2, -2, 2);
+        productScene.add(productSpotLight2);
+
+        // OrbitControls for Product
+        const controls = new THREE.OrbitControls(productCamera, productRenderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Create Product Watch
+        const productModel = createWatch('circular');
+        productModel.scale.set(1.3, 1.3, 1.3);
+        productScene.add(productModel);
+
+        // Product Animation Loop
+        function animateProduct() {
+            requestAnimationFrame(animateProduct);
+            controls.update();
+            productRenderer.render(productScene, productCamera);
+        }
+        animateProduct();
+
+        // GSAP Animation for Product Watch
+        gsap.to(productModel.children[1].material, {
+            opacity: 0.6,
+            duration: 1.2,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut'
+        });
+
+        // Handle Window Resize
+        window.addEventListener('resize', () => {
+            const width = Math.min(window.innerWidth * 0.8, 600);
+            const height = width * (400 / 600);
+            heroCamera.aspect = width / height;
+            heroCamera.updateProjectionMatrix();
+            heroRenderer.setSize(width, height);
+
+            productCamera.aspect = width / height;
+            productCamera.updateProjectionMatrix();
+            productRenderer.setSize(width, height);
+        });
+
+        // GSAP Animations for Text
+        gsap.from('.animate-text', {
+            opacity: 0,
+            y: 50,
+            scale: 0.9,
+            duration: 1.2,
+            stagger: 0.3,
+            ease: 'power3.out'
+        });
+    </script>
+</body>
+</html>
