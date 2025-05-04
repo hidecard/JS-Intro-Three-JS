@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sneaker Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Bebas Neue', sans-serif;
+            color: #ffffff;
+            overflow-x: hidden;
+            background: #1a1a1a; /* Black */
+        }
+        /* Navigation */
+        nav {
+            background: #1a1a1a;
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 2px solid #ff4d00;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 2rem;
+        }
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1.8rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ff4d00; /* Neon orange */
+            transform: rotate(-5deg) scale(1.1);
+        }
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #2e2e2e 0%, #1a1a1a 100%);
+            overflow: hidden;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 77, 0, 0.3), transparent);
+            opacity: 0.5;
+        }
+        #hero-canvas {
+            width: 80%;
+            max-width: 600px;
+            height: 600px;
+            border: 2px solid #ff4d00;
+            box-shadow: 0 0 20px #ff4d00;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .hero-content {
+            text-align: center;
+            color: #ffffff;
+            z-index: 10;
+            position: absolute;
+            bottom: 10%;
+        }
+        .hero-content h1 {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 15px #ff4d00;
+        }
+        .hero-content p {
+            font-size: 2rem;
+            text-shadow: 0 0 10px #ff4d00;
+        }
+        /* Product Section */
+        #product {
+            padding: 5rem 2rem;
+            background: #1a1a1a;
+            text-align: center;
+        }
+        #product-canvas {
+            width: 80%;
+            max-width: 600px;
+            height: 500px;
+            margin: 2rem auto;
+            border: 2px solid #ff4d00;
+            box-shadow: 0 0 20px #ff4d00;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .product-details h2 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #ff4d00;
+            text-shadow: 0 0 15px #ff4d00;
+        }
+        .product-details p {
+            font-size: 1.8rem;
+            max-width: 600px;
+            margin: 0 auto;
+            color: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#product">Sneakers</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1 class="animate-text">Fresh Kicks</h1>
+            <p class="animate-text">Step into style</p>
+        </div>
+    </section>
+
+    <!-- Product Section -->
+    <section id="product">
+        <h2 class="animate-text">Interactive Sneaker</h2>
+        <canvas id="product-canvas"></canvas>
+        <div class="product-details">
+            <h2>Low-Top Blaze</h2>
+            <p>Check out this sleek sneaker, designed for urban swagger and bold vibes.</p>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script>
+        // Helper function to create a sneaker
+        function createSneaker(type = 'high-top') {
+            const group = new THREE.Group();
+
+            // Sole
+            const soleMaterial = new THREE.MeshStandardMaterial({ color: type === 'high-top' ? 0xffffff : 0xff4d00 });
+            const soleGeometry = new THREE.BoxGeometry(0.8, 0.1, 0.4);
+            const sole = new THREE.Mesh(soleGeometry, soleMaterial);
+            sole.position.y = 0.05;
+            group.add(sole);
+
+            // Upper
+            const upperMaterial = new THREE.MeshStandardMaterial({ color: type === 'high-top' ? 0x1a1a1a : 0xffffff });
+            const upperGeometry = type === 'high-top' ?
+                new THREE.BoxGeometry(0.7, 0.4, 0.35) :
+                new THREE.BoxGeometry(0.7, 0.2, 0.35);
+            const upper = new THREE.Mesh(upperGeometry, upperMaterial);
+            upper.position.y = type === 'high-top' ? 0.25 : 0.15;
+            group.add(upper);
+
+            // Laces
+            const laceMaterial = new THREE.MeshBasicMaterial({ color: 0xff4d00 });
+            for (let i = 0; i < 3; i++) {
+                const laceGeometry = new THREE.BoxGeometry(0.05, 0.01, 0.3);
+                const lace = new THREE.Mesh(laceGeometry, laceMaterial);
+                lace.position.set(0, type === 'high-top' ? 0.3 + i * 0.05 : 0.2 + i * 0.03, 0.15);
+                group.add(lace);
+            }
+
+            // Tongue
+            const tongueGeometry = new THREE.BoxGeometry(0.2, type === 'high-top' ? 0.3 : 0.15, 0.05);
+            const tongue = new THREE.Mesh(tongueGeometry, upperMaterial);
+            tongue.position.set(0, type === 'high-top' ? 0.35 : 0.2, 0.15);
+            group.add(tongue);
+
+            return group;
+        }
+
+        // Hero Section Three.js Setup
+        const heroCanvas = document.getElementById('hero-canvas');
+        const heroScene = new THREE.Scene();
+        const heroCamera = new THREE.PerspectiveCamera(75, (window.innerWidth * 0.8) / 600, 0.1, 1000);
+        const heroRenderer = new THREE.WebGLRenderer({ canvas: heroCanvas, alpha: true });
+        heroRenderer.setSize(window.innerWidth * 0.8, 600);
+        heroCamera.position.z = 1.5;
+
+        // Lighting for Hero
+        const heroAmbientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        heroScene.add(heroAmbientLight);
+        const heroSpotLight = new THREE.SpotLight(0xff4d00, 1.5, 10, Math.PI / 4);
+        heroSpotLight.position.set(2, 2, 2);
+        heroScene.add(heroSpotLight);
+        const heroPointLight = new THREE.PointLight(0xffffff, 0.8, 10);
+        heroPointLight.position.set(-2, -2, 2);
+        heroScene.add(heroPointLight);
+
+        // Create Hero Sneaker
+        const heroModel = createSneaker('high-top');
+        heroModel.scale.set(1.5, 1.5, 1.5);
+        heroScene.add(heroModel);
+
+        // Hero Animation Loop
+        function animateHero() {
+            requestAnimationFrame(animateHero);
+            heroModel.rotation.y += 0.01;
+            heroRenderer.render(heroScene, heroCamera);
+        }
+        animateHero();
+
+        // GSAP Animation for Hero Sneaker
+        gsap.to(heroModel.position, {
+            y: 0.2,
+            duration: 1.5,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut'
+        });
+        gsap.to(heroModel.children[1].material, {
+            emissive: new THREE.Color(0xff4d00),
+            emissiveIntensity: 0.5,
+            duration: 1,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut'
+        });
+
+        // Product Section Three.js Setup
+        const productCanvas = document.getElementById('product-canvas');
+        const productScene = new THREE.Scene();
+        const productCamera = new THREE.PerspectiveCamera(75, (window.innerWidth * 0.8) / 500, 0.1, 1000);
+        const productRenderer = new THREE.WebGLRenderer({ canvas: productCanvas, alpha: true });
+        productRenderer.setSize(window.innerWidth * 0.8, 500);
+        productCamera.position.z = 1.5;
+
+        // Lighting for Product
+        const productAmbientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        productScene.add(productAmbientLight);
+        const productSpotLight = new THREE.SpotLight(0xff4d00, 1.5, 10, Math.PI / 4);
+        productSpotLight.position.set(2, 2, 2);
+        productScene.add(productSpotLight);
+        const productPointLight = new THREE.PointLight(0xffffff, 0.8, 10);
+        productPointLight.position.set(-2, -2, 2);
+        productScene.add(productPointLight);
+
+        // OrbitControls for Product
+        const controls = new THREE.OrbitControls(productCamera, productRenderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Create Product Sneaker
+        const productModel = createSneaker('low-top');
+        productModel.scale.set(1.3, 1.3, 1.3);
+        productScene.add(productModel);
+
+        // Product Animation Loop
+        function animateProduct() {
+            requestAnimationFrame(animateProduct);
+            controls.update();
+            productRenderer.render(productScene, productCamera);
+        }
+        animateProduct();
+
+        // GSAP Animation for Product Sneaker
+        gsap.to(productModel.children[0].material, {
+            emissive: new THREE.Color(0xff4d00),
+            emissiveIntensity: 0.5,
+            duration: 1.2,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut'
+        });
+
+        // Handle Window Resize
+        window.addEventListener('resize', () => {
+            heroCamera.aspect = (window.innerWidth * 0.8) / 600;
+            heroCamera.updateProjectionMatrix();
+            heroRenderer.setSize(window.innerWidth * 0.8, 600);
+
+            productCamera.aspect = (window.innerWidth * 0.8) / 500;
+            productCamera.updateProjectionMatrix();
+            productRenderer.setSize(window.innerWidth * 0.8, 500);
+        });
+
+        // GSAP Animations for Text
+        gsap.from('.animate-text', {
+            opacity: 0,
+            y: 50,
+            skewY: 5,
+            scale: 0.9,
+            duration: 1,
+            stagger: 0.3,
+            ease: 'power3.out'
+        });
+    </script>
+</body>
+</html>

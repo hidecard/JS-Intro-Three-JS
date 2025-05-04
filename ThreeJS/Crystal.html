@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crystal Prism Showcase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Cinzel', serif;
+            color: #2e2e2e;
+            overflow-x: hidden;
+            background: #f8f1e9; /* Soft ivory */
+        }
+        /* Navigation */
+        nav {
+            background: #ffffff;
+            padding: 1.2rem 2rem;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid #d4a373;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 2.5rem;
+        }
+        nav ul li a {
+            color: #2e2e2e;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #d4a373; /* Rose gold */
+        }
+        /* Hero Section */
+        #hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f1e9 0%, #e8dfd3 100%);
+            overflow: hidden;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(212, 163, 115, 0.1), transparent);
+            opacity: 0.3;
+        }
+        #hero-canvas {
+            width: 80%;
+            max-width: 500px;
+            height: 600px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 20px rgba(212, 163, 115, 0.3);
+        }
+        .hero-content {
+            text-align: center;
+            color: #2e2e2e;
+            z-index: 10;
+            position: absolute;
+            top: 10%;
+        }
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .hero-content p {
+            font-size: 1.6rem;
+            font-weight: 400;
+        }
+        /* Product Section */
+        #product {
+            padding: 5rem 2rem;
+            background: #2e2e2e;
+            text-align: center;
+        }
+        #product-canvas {
+            width: 80%;
+            max-width: 500px;
+            height: 500px;
+            margin: 2rem auto;
+            border-radius: 10px;
+            background: rgba(248, 241, 233, 0.1);
+            box-shadow: 0 0 20px rgba(212, 163, 115, 0.3);
+        }
+        .product-details h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #f8f1e9;
+        }
+        .product-details p {
+            font-size: 1.4rem;
+            max-width: 600px;
+            margin: 0 auto;
+            color: #d4a373;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#product">Crystals</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1 class="animate-text">Crystal Elegance</h1>
+            <p class="animate-text">Timeless beauty in 3D</p>
+        </div>
+    </section>
+
+    <!-- Product Section -->
+    <section id="product">
+        <h2 class="animate-text">Interactive Prism</h2>
+        <canvas id="product-canvas"></canvas>
+        <div class="product-details">
+            <h2>Faceted Prism</h2>
+            <p>Explore this radiant crystal prism, crafted to reflect light and sophistication.</p>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script>
+        // Helper function to create a crystal prism
+        function createPrism(type = 'octagonal') {
+            const group = new THREE.Group();
+
+            // Crystal body
+            const crystalMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0xe6e6fa,
+                transparent: true,
+                opacity: 0.9,
+                metalness: 0.2,
+                roughness: 0.1,
+                clearcoat: 1,
+                clearcoatRoughness: 0
+            });
+            const crystalGeometry = type === 'octagonal' ?
+                new THREE.CylinderGeometry(0.3, 0.3, 1.2, 8) :
+                new THREE.CylinderGeometry(0.3, 0.3, 0.8, 6);
+            const crystal = new THREE.Mesh(crystalGeometry, crystalMaterial);
+            crystal.position.y = type === 'octagonal' ? 0.6 : 0.4;
+            group.add(crystal);
+
+            // Base
+            const baseMaterial = new THREE.MeshStandardMaterial({
+                color: type === 'octagonal' ? 0xd4a373 : 0x2e2e2e,
+                metalness: 0.8,
+                roughness: 0.2
+            });
+            const baseGeometry = new THREE.CylinderGeometry(0.4, 0.4, 0.1, 32);
+            const base = new THREE.Mesh(baseGeometry, baseMaterial);
+            base.position.y = 0.05;
+            group.add(base);
+
+            return group;
+        }
+
+        // Hero Section Three.js Setup
+        const heroCanvas = document.getElementById('hero-canvas');
+        const heroScene = new THREE.Scene();
+        const heroCamera = new THREE.PerspectiveCamera(75, (window.innerWidth * 0.8) / 600, 0.1, 1000);
+        const heroRenderer = new THREE.WebGLRenderer({ canvas: heroCanvas, alpha: true });
+        heroRenderer.setSize(window.innerWidth * 0.8, 600);
+        heroCamera.position.z = 2;
+
+        // Lighting for Hero
+        const heroAmbientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        heroScene.add(heroAmbientLight);
+        const heroSpotLight1 = new THREE.SpotLight(0xffffff, 1.2, 10, Math.PI / 6);
+        heroSpotLight1.position.set(2, 2, 2);
+        heroScene.add(heroSpotLight1);
+        const heroSpotLight2 = new THREE.SpotLight(0xd4a373, 0.8, 10, Math.PI / 6);
+        heroSpotLight2.position.set(-2, -2, 2);
+        heroScene.add(heroSpotLight2);
+
+        // Create Hero Prism
+        const heroModel = createPrism('octagonal');
+        heroModel.scale.set(1.2, 1.2, 1.2);
+        heroScene.add(heroModel);
+
+        // Hero Animation Loop
+        function animateHero() {
+            requestAnimationFrame(animateHero);
+            heroModel.rotation.y += 0.005;
+            heroModel.rotation.x += 0.002;
+            heroRenderer.render(heroScene, heroCamera);
+        }
+        animateHero();
+
+        // GSAP Animation for Hero Prism
+        gsap.to(heroModel.position, {
+            y: 0.2,
+            duration: 2,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut'
+        });
+
+        // Product Section Three.js Setup
+        const productCanvas = document.getElementById('product-canvas');
+        const productScene = new THREE.Scene();
+        const productCamera = new THREE.PerspectiveCamera(75, (window.innerWidth * 0.8) / 500, 0.1, 1000);
+        const productRenderer = new THREE.WebGLRenderer({ canvas: productCanvas, alpha: true });
+        productRenderer.setSize(window.innerWidth * 0.8, 500);
+        productCamera.position.z = 1.8;
+
+        // Lighting for Product
+        const productAmbientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        productScene.add(productAmbientLight);
+        const productSpotLight1 = new THREE.SpotLight(0xffffff, 1.2, 10, Math.PI / 6);
+        productSpotLight1.position.set(2, 2, 2);
+        productScene.add(productSpotLight1);
+        const productSpotLight2 = new THREE.SpotLight(0xd4a373, 0.8, 10, Math.PI / 6);
+        productSpotLight2.position.set(-2, -2, 2);
+        productScene.add(productSpotLight2);
+
+        // OrbitControls for Product
+        const controls = new THREE.OrbitControls(productCamera, productRenderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Create Product Prism
+        const productModel = createPrism('hexagonal');
+        productModel.scale.set(1, 1, 1);
+        productScene.add(productModel);
+
+        // Product Animation Loop
+        function animateProduct() {
+            requestAnimationFrame(animateProduct);
+            controls.update();
+            productRenderer.render(productScene, productCamera);
+        }
+        animateProduct();
+
+        // GSAP Animation for Product Prism
+        gsap.to(productModel.children[0].material, {
+            opacity: 0.7,
+            duration: 1.5,
+            yoyo: true,
+            repeat: -1,
+            ease: 'sine.inOut'
+        });
+
+        // Handle Window Resize
+        window.addEventListener('resize', () => {
+            heroCamera.aspect = (window.innerWidth * 0.8) / 600;
+            heroCamera.updateProjectionMatrix();
+            heroRenderer.setSize(window.innerWidth * 0.8, 600);
+
+            productCamera.aspect = (window.innerWidth * 0.8) / 500;
+            productCamera.updateProjectionMatrix();
+            productRenderer.setSize(window.innerWidth * 0.8, 500);
+        });
+
+        // GSAP Animations for Text
+        gsap.from('.animate-text', {
+            opacity: 0,
+            y: 50,
+            scale: 0.9,
+            duration: 1.2,
+            stagger: 0.3,
+            ease: 'power2.out'
+        });
+    </script>
+</body>
+</html>
